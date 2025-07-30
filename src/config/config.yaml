@@ -1,0 +1,45 @@
+default: &default
+  app:
+    name: "PontoVendaPipeline"
+    log_level: "INFO"
+  spark:
+    log_level: "WARN"
+  storage:
+    database_pv: "DB_CORP_REPOSITORIOSDEDADOS_REDECARDLAKESATELITE_SOT_01"
+    table_pv: "S_PDV"
+    table_pv_partition: "CAST((ano || LPAD(mes, 2, '0') || LPAD(dia, 2, '0')) AS INT)"
+    database_estab: "DB_corp_REPOSITORIOSDEDADOS_REDECARDLAKESATELITE_SOT_01"
+    table_estab: "S_ESTB"
+    table_estab_partition: "CAST((ano || LPAD(mes, 2, '0') || LPAD(dia, 2, '0')) AS INT)"
+    database_client: "db_corp_canaisnaoassistidos_contaatlas_sot_01"
+    table_client: "tb_hr5_ext_clientes_emps_sot"
+    table_client_partition: "anomesdia"
+    database_quality: ""
+    table_quality: ""
+    quality_rules:
+      - ""
+    table_output: ""
+    table_output_location: ""
+    table_output_database: ""
+
+
+dev:
+  <<: *default
+  spark:
+    master: "local[*]"
+    env: "dev"
+
+hom:
+  <<: *default
+  spark:
+    master: "local[*]"
+    env: "hom"
+    driver_memory: "2g"
+    executor_memory: "2g"
+    shuffle_partitions: 20
+
+prod:
+  <<: *default
+  spark:
+    master: "yarn"
+    env: "prod"
